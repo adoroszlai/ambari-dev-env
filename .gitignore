@@ -1,4 +1,5 @@
+*.bak
+*.swp
+*.yml
 .dev-profile
 conf/version
-*.yml
-*.bak
