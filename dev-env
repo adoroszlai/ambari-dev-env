@@ -63,17 +63,6 @@ case "$1" in
     rm -rf "$HOME/tmp/docker/ambari-server/logs"
     ;;
   *)
-    echo "Available commands:
-      ./dev-env setup
-      ./dev-env start
-      ./dev-env schema-upgrade
-      ./dev-env schema-reload
-      ./dev-env yum-repo-setup
-      ./dev-env yum-repo-start
-      ./dev-env use-local-yum-repo
-      ./dev-env openldap-start
-      ./dev-env clean-setup
-      ./dev-env build
-      ./dev-env clean-logs
-      "
+    echo "Available commands:"
+    grep '^\s\+[a-z].*)$' $0 | sed -e 's/)//'
 esac
