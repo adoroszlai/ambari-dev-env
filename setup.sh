@@ -98,7 +98,7 @@ build-rpm() {
 
   DEV_MODULE=$1
   DEV_MVN_RPM_COMMAND=""
-  DEV_RPM_EXISTS_COMMAND=""
+  DEV_RPM_EXISTS_CHECK_DIR=""
   container_workspace="/ambari/$DEV_MODULE"
 
   case "$DEV_MODULE" in
