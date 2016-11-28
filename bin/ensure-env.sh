@@ -32,6 +32,7 @@ source .dev-profile
 
 show_dev_env() {
   echo "Development environement variables: "
+  local i val
   for i in ${!DEV_*}
   do
     eval val=\$$i

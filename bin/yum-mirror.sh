@@ -44,13 +44,13 @@ create-yum-repo-mirror() {
 }
 
 gen-yum-repo-yml() {
-  DEV_YUM_CONTAINER_NAME=yum-repo
+  local dev_yum_container_name=yum-repo
 
   cat <<EOF > yum-repo.yml
-$DEV_YUM_CONTAINER_NAME:
+$dev_yum_container_name:
   privileged: true
-  container_name: $DEV_YUM_CONTAINER_NAME
-  hostname: $DEV_YUM_CONTAINER_NAME
+  container_name: $dev_yum_container_name
+  hostname: $dev_yum_container_name
   entrypoint: ["/bin/sh"]
   ports:
     - "80:80"
@@ -63,14 +63,14 @@ EOF
 }
 
 use-local-repo() {
-  B2D_IP=$(docker-machine ip test)
+  local b2d_ip=$(docker-machine ip test)
 
   cat <<EOF >$HOME/tmp/local_repo.json
   {
     "Repositories" : {
-      "base_url" : "http://$B2D_IP/repos/$REPO_ID",
-      "default_base_url" : "http://$B2D_IP/repos/$REPO_ID",
-      "latest_base_url" : "http://$B2D_IP/repos/$REPO_ID",
+      "base_url" : "http://$b2d_ip/repos/$REPO_ID",
+      "default_base_url" : "http://$b2d_ip/repos/$REPO_ID",
+      "latest_base_url" : "http://$b2d_ip/repos/$REPO_ID",
       "mirrors_list" : null,
       "os_type" : "redhat6",
       "repo_id" : "HDP-$STACK_VERSION_MAJOR.$STACK_VERSION_MINOR",
@@ -81,7 +81,7 @@ use-local-repo() {
   }
 
 EOF
-  curl --verbose -u admin:admin -H "X-Requested-By:ambari" -X PUT -d @"$HOME/tmp/local_repo.json" http://$B2D_IP:8080/api/v1/stacks/HDP/versions/$STACK_VERSION_MAJOR.$STACK_VERSION_MINOR/operating_systems/redhat6/repositories/$REPO_ID
+  curl --verbose -u admin:admin -H "X-Requested-By:ambari" -X PUT -d @"$HOME/tmp/local_repo.json" http://$b2d_ip:8080/api/v1/stacks/HDP/versions/$STACK_VERSION_MAJOR.$STACK_VERSION_MINOR/operating_systems/redhat6/repositories/$REPO_ID
 }
 
 main() {

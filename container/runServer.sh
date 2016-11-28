@@ -28,23 +28,23 @@ ambari-dev-server-start() {
     -classpath $(cat /tmp/cp.txt):target/classes:/ambari-server-conf:/ambari/ambari-views/target \
     org.apache.ambari.server.controller.AmbariServer &
 
-  SERVER_PID="$!"
-  echo "Ambari server PID: [ $SERVER_PID ]"
+  local server_pid="$!"
+  echo "Ambari server PID: [ $server_pid ]"
   if [ ! -d "/var/run/ambari-server" ]
   then
     echo "Creating folder: /var/run/ambari-server"
     mkdir /var/run/ambari-server
   fi
 
-  echo $SERVER_PID > /var/run/ambari-server/ambari-server.pid
+  echo $server_pid > /var/run/ambari-server/ambari-server.pid
 
   # tests for the existence of the process
-  kill -0 $SERVER_PID 2>/dev/null
-  server_runs="$?"
+  kill -0 $server_pid 2>/dev/null
+  local server_runs="$?"
 
   while [ "$server_runs" -lt 1 ]
   do
-    kill -0 $SERVER_PID 2>/dev/null
+    kill -0 $server_pid 2>/dev/null
     server_runs="$?"
     if [ "$server_runs" -lt 1 ]
     then

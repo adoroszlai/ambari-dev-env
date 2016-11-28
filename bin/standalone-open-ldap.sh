@@ -21,13 +21,13 @@ setup() {
 }
 
 gen-openldap-yml() {
-  DEV_OPENLDAP_CONTAINER_NAME=openldap
+  local dev_openldap_container_name=openldap
 
   cat <<EOF > openldap.yml
-$DEV_OPENLDAP_CONTAINER_NAME:
+$dev_openldap_container_name:
   privileged: true
-  container_name: $DEV_OPENLDAP_CONTAINER_NAME
-  hostname: $DEV_OPENLDAP_CONTAINER_NAME
+  container_name: $dev_openldap_container_name
+  hostname: $dev_openldap_container_name
   ports:
     - "389:389"
   environment:
@@ -40,9 +40,9 @@ EOF
 }
 
 ldap_exists() {
-  entry_to_search=$1
+  local entry_to_search=$1
 
-  found_entry=$(ldapsearch -x -h "$B2D_IP" -LLL -D "$LDAP_ADMIN_USER" -w "$LDAP_ROOTPASS"  -b "$LDAP_SEARCH_BASE" -u "$entry_to_search" | grep ufn:)
+  local found_entry=$(ldapsearch -x -h "$B2D_IP" -LLL -D "$LDAP_ADMIN_USER" -w "$LDAP_ROOTPASS"  -b "$LDAP_SEARCH_BASE" -u "$entry_to_search" | grep ufn:)
 
   if [ -n "$found_entry" ]
   then

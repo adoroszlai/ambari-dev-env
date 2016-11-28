@@ -40,9 +40,9 @@ git-checkout() {
 
 
 execute-jenkins-job() {
-  AMBARI_DEV_MODULE=$1
-  MVN_CMD="${@:2}"
-  echo "Executing build task [ $MVN_CMD ] on module [ $AMBARI_DEV_MODULE ]"
+  local ambari_dev_module=$1
+  local mvn_cmd="${@:2}"
+  echo "Executing build task [ $mvn_cmd ] on module [ $ambari_dev_module ]"
 
   docker run \
     --rm --privileged \
@@ -53,7 +53,7 @@ execute-jenkins-job() {
     --entrypoint=/bin/bash \
     -w /ambari/ \
     "$AMBARI_DEV_DOCKER_IMAGE" \
-    -c "$MVN_CMD"
+    -c "$mvn_cmd"
 }
 
 install-all() {

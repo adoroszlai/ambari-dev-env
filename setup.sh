@@ -37,6 +37,7 @@ set-project-path() {
 
 show-dev-env() {
   echo "Development environment variables: "
+  local i val
   for i in ${!DEV_*}
   do
     eval val=\$$i
@@ -96,28 +97,28 @@ build-rpm() {
     exit 1
   fi
 
-  DEV_MODULE=$1
-  DEV_MVN_RPM_COMMAND=""
-  DEV_RPM_EXISTS_CHECK_DIR=""
-  container_workspace="/ambari/$DEV_MODULE"
+  local dev_module=$1
+  local dev_mvn_rpm_command=""
+  local dev_rpm_exists_check_dir=""
+  local container_workspace="/ambari/$dev_module"
 
-  case "$DEV_MODULE" in
+  case "$dev_module" in
     ambari-metrics)
-      DEV_RPM_EXISTS_CHECK_DIR="$DEV_AMBARI_PROJECT_DIR/$DEV_MODULE/ambari-metrics-assembly/target/rpm"
-      DEV_MVN_RPM_COMMAND="mvn package -Dbuild-rpm -Dstack.distribution=HDP -DskipTests -Dmaven.clover.skip=true -Dfindbugs.skip=true -Drat.skip=true -Dpython.ver='python >= 2.6'"
+      dev_rpm_exists_check_dir="$DEV_AMBARI_PROJECT_DIR/$dev_module/ambari-metrics-assembly/target/rpm"
+      dev_mvn_rpm_command="mvn package -Dbuild-rpm -Dstack.distribution=HDP -DskipTests -Dmaven.clover.skip=true -Dfindbugs.skip=true -Drat.skip=true -Dpython.ver='python >= 2.6'"
       ;;
     *)
-      DEV_RPM_EXISTS_CHECK_DIR="$DEV_AMBARI_PROJECT_DIR/$DEV_MODULE/target/rpm/$DEV_MODULE/RPMS/x86_64"
-      DEV_MVN_RPM_COMMAND="mvn package rpm:rpm -B -Dstack.distribution=HDP -DskipTests -Dmaven.clover.skip=true -Dfindbugs.skip=true -Drat.skip=true -Dpython.ver=\"python >= 2.6\""
+      dev_rpm_exists_check_dir="$DEV_AMBARI_PROJECT_DIR/$dev_module/target/rpm/$dev_module/RPMS/x86_64"
+      dev_mvn_rpm_command="mvn package rpm:rpm -B -Dstack.distribution=HDP -DskipTests -Dmaven.clover.skip=true -Dfindbugs.skip=true -Drat.skip=true -Dpython.ver=\"python >= 2.6\""
   esac
 
-  echo -n "Build rpm for $DEV_MODULE ... "
+  echo -n "Build rpm for $dev_module ... "
 
-  if [ -d "$DEV_RPM_EXISTS_CHECK_DIR" ]
+  if [ -d "$dev_rpm_exists_check_dir" ]
   then
-    echo "Skipping due to [ -d $DEV_RPM_EXISTS_CHECK_DIR ] command returned true !"
+    echo "Skipping due to [ -d $dev_rpm_exists_check_dir ] command returned true !"
   else
-    echo "Running command: [ $DEV_MVN_RPM_COMMAND ]"
+    echo "Running command: [ $dev_mvn_rpm_command ]"
     docker run \
       --rm \
       --privileged \
@@ -126,17 +127,17 @@ build-rpm() {
       -v $HOME/.m2/:/root/.m2 \
       -w $container_workspace \
       $DEV_DOCKER_IMAGE \
-      -c "$DEV_MVN_RPM_COMMAND"
+      -c "$dev_mvn_rpm_command"
   fi
 }
 
 gen-local-db-container-yml() {
-  CONTAINER_NAME=ambari-db
+  local container_name=ambari-db
   cat >> $1 <<EOF
-$CONTAINER_NAME:
+$container_name:
   privileged: true
-  container_name: $CONTAINER_NAME
-  hostname: $CONTAINER_NAME
+  container_name: $container_name
+  hostname: $container_name
   ports:
     - "5432:5432"
   environment:
@@ -152,12 +153,12 @@ EOF
 }
 
 gen-ambari-server-yml() {
-  CONTAINER_NAME=ambari-server
+  local container_name=ambari-server
   cat >> $1 <<EOF
-$CONTAINER_NAME:
+$container_name:
   privileged: true
-  container_name: $CONTAINER_NAME
-  hostname: $CONTAINER_NAME.node.dc1.consul
+  container_name: $container_name
+  hostname: $container_name.node.dc1.consul
   ports:
     - "$DEV_AMBARI_SERVER_DEBUG_PORT:50100"
     - "8080:8080"
@@ -194,12 +195,12 @@ EOF
 }
 
 gen-ambari-agent-yml() {
-  CONTAINER_NAME=ambari-agent-$i
+  local container_name=ambari-agent-$i
   cat >> $1 <<EOF
-$CONTAINER_NAME:
+$container_name:
   privileged: true
-  container_name: $CONTAINER_NAME
-  hostname: $CONTAINER_NAME.node.dc1.consul
+  container_name: $container_name
+  hostname: $container_name.node.dc1.consul
   image: $DEV_DOCKER_IMAGE
   dns:
     - 0.0.0.0
@@ -221,12 +222,12 @@ EOF
 }
 
 gen-kerberos-server-yml() {
-  CONTAINER_NAME=kerberos-server
+  local container_name=kerberos-server
   cat >> $1 <<EOF
-$CONTAINER_NAME:
+$container_name:
   privileged: true
-  container_name: $CONTAINER_NAME
-  hostname: $CONTAINER_NAME
+  container_name: $container_name
+  hostname: $container_name
   volumes:
     - "/dev/urandom:/dev/random"
     - "$HOME/tmp/docker/kdc/log:/var/log/kerberos"
@@ -242,7 +243,7 @@ gen-compose-yml() {
   echo "Generating compose file: $1"
   if [ -f "$1" ]
   then
-    backup_yml=$1_$(date +"%Y%m%d_%H%M%S").bak
+    local backup_yml=$1_$(date +"%Y%m%d_%H%M%S").bak
     mv $1 $backup_yml
     echo "Backed up previous compose file to: $backup_yml"
   fi
