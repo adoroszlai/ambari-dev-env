@@ -144,49 +144,49 @@ main(){
   case $1 in
     yum-repos)
        execute_cmd $server "$(set_yum_repo)"
-       for h in $hosts;
+       for h in $hosts
        do
          execute_cmd $h "$(set_yum_repo)"
-       done;
+       done
     ;;
     install)
        execute_cmd $server "yum install -y ambari-server"
-       for h in $hosts;
+       for h in $hosts
        do
          execute_cmd $h "yum install -y ambari-agent"
-       done;
+       done
     ;;
     start)
       #  execute_cmd $server "$(start_server)"
-       for h in $hosts;
+       for h in $hosts
        do
          execute_cmd $h "$(start_agent)"
-       done;
+       done
     ;;
 
     yum-repos)
        execute_cmd $server "$(set_yum_repo)"
-       for h in $hosts;
+       for h in $hosts
        do
          execute_cmd $h "$(set_yum_repo)"
-       done;
+       done
     ;;
     server)
         echo "************* Processing server, host: [ $server ] ****************"
         reset_server $server
        ;;
     agent)
-        for h in $hosts;
+        for h in $hosts
         do
             echo "************* Processing agents, host: [ $h ] ****************"
             reset_agent "$h"
-        done;
+        done
        ;;
     uninstall-ambari)
-        for h in $hosts;
+        for h in $hosts
         do
           execute_cmd $h "$(uninstall_ambari_cmd)"
-        done;
+        done
        ;;
     *)
        ;;

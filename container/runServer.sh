@@ -46,7 +46,7 @@ ambari-dev-server-start() {
   do
     kill -0 $SERVER_PID 2>/dev/null
     server_runs="$?"
-    if [ "$server_runs" -lt 1 ];
+    if [ "$server_runs" -lt 1 ]
     then
       echo "Ambari Server is running"
       sleep 10

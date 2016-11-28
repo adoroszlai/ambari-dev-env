@@ -74,7 +74,7 @@ DEV_AMBARI_PASSPHRASE=DEV
 # LDAP_ROOTPASS=
 EOF
     echo "Please fill the newly generated .dev-profile in the current directory"
-    exit 1;
+    exit 1
   else
     source .dev-profile
     show-dev-env
@@ -93,7 +93,7 @@ build-rpm() {
   if [ -z $1 ]
   then
     echo "No ambari module name provided!"
-    exit 1;
+    exit 1
   fi
 
   DEV_MODULE=$1
@@ -242,7 +242,7 @@ gen-compose-yml() {
   echo "Generating compose file: $1"
   if [ -f "$1" ]
   then
-    backup_yml=$1_$(date +"%Y%m%d_%H%M%S").bak;
+    backup_yml=$1_$(date +"%Y%m%d_%H%M%S").bak
     mv $1 $backup_yml
     echo "Backed up previous compose file to: $backup_yml"
   fi

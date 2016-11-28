@@ -13,7 +13,7 @@
 
 case "$1" in
   setup)
-    echo "Setting up dev env ...";
+    echo "Setting up dev env ..."
     ./setup.sh
     ;;
   start)
@@ -21,24 +21,24 @@ case "$1" in
     docker-compose up -d
     ;;
   schema-upgrade)
-    echo "Starting schema upgrade ...";
+    echo "Starting schema upgrade ..."
     docker-compose run -d --service-ports --entrypoint="/scripts/upgrade-schema.sh" ambari-server -c "cc"
     ;;
   schema-reload)
-    echo "Reloading database ...";
+    echo "Reloading database ..."
     docker-compose run -d --service-ports --entrypoint="/scripts/reload-schema.sh" ambari-db
     ;;
   yum-repo-start)
-    echo "Starting local yum repo mirror ...";
+    echo "Starting local yum repo mirror ..."
     docker-compose -f yum-repo.yml up -d
     ;;
   yum-repo-setup)
-    echo "Setting up local yum repo mirror ...";
+    echo "Setting up local yum repo mirror ..."
     source .dev-profile
     ./bin/yum-mirror.sh
     ;;
   use-local-yum-repo)
-    echo "Setting up local yum repo in ambari ...";
+    echo "Setting up local yum repo in ambari ..."
     source .dev-profile
     ./bin/yum-mirror.sh put-local-repo
     ;;

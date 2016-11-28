@@ -33,9 +33,9 @@ git-checkout() {
   mkdir $AMBARI_DEV_JENKINS_TMP_DIR
   cd $AMBARI_DEV_JENKINS_TMP_DIR
 
-  git clone $AMBARI_DEV_GIT_REPO;
+  git clone $AMBARI_DEV_GIT_REPO
   cd ambari
-  git checkout $AMBARI_DEV_FEATURE_BRANCH;
+  git checkout $AMBARI_DEV_FEATURE_BRANCH
 }
 
 
