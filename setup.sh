@@ -11,24 +11,22 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-
-check-dev-env(){
-
-: ${HOME?"Please set the variable in the .dev-profile file"}
-: ${DEV_DOCKER_IMAGE:=ambari/docker-dev}
-: ${DEV_AMBARI_PROJECT_DIR?"Please set the variable in the .dev-profile file"}
-: ${DEV_AMBARI_SERVER_CONFIG_DIR:="$DEV_PROJECT_PATH/conf"}
-: ${DEV_NUMBER_OF_AGENTS:=3}
-: ${DEV_AMBARI_SERVER_VERSION:="2.0.0.0"}
-: ${DEV_AMBARI_SERVER_DEBUG_PORT:=5005}
-: ${DEV_KERBEROS_DOCKER_IMAGE:=sequenceiq/kerberos}
-: ${DEV_KERBEROS_REALM:=DEV.LOCAL}
-: ${DEV_KERBEROS_DOMAIN_REALM:=node.dc1.consul}
-: ${DEV_AMBARI_PASSPHRASE:=DEV}
-: ${DEV_AMBARI_SECURITY_MASTER_KEY:=@mb@r1-m@st3r-k3y}
-: ${DEV_YUM_REPO_DIR:="$HOME/tmp/docker/repos"}
-: ${LDAP_BASE_DOMAIN:=dev.local}
-: ${LDAP_ROOTPASS:=s3cr3tpassw0rd}
+check-dev-env() {
+  : ${HOME?"Please set the variable in the .dev-profile file"}
+  : ${DEV_DOCKER_IMAGE:=ambari/docker-dev}
+  : ${DEV_AMBARI_PROJECT_DIR?"Please set the variable in the .dev-profile file"}
+  : ${DEV_AMBARI_SERVER_CONFIG_DIR:="$DEV_PROJECT_PATH/conf"}
+  : ${DEV_NUMBER_OF_AGENTS:=3}
+  : ${DEV_AMBARI_SERVER_VERSION:="2.0.0.0"}
+  : ${DEV_AMBARI_SERVER_DEBUG_PORT:=5005}
+  : ${DEV_KERBEROS_DOCKER_IMAGE:=sequenceiq/kerberos}
+  : ${DEV_KERBEROS_REALM:=DEV.LOCAL}
+  : ${DEV_KERBEROS_DOMAIN_REALM:=node.dc1.consul}
+  : ${DEV_AMBARI_PASSPHRASE:=DEV}
+  : ${DEV_AMBARI_SECURITY_MASTER_KEY:=@mb@r1-m@st3r-k3y}
+  : ${DEV_YUM_REPO_DIR:="$HOME/tmp/docker/repos"}
+  : ${LDAP_BASE_DOMAIN:=dev.local}
+  : ${LDAP_ROOTPASS:=s3cr3tpassw0rd}
 }
 
 set-project-path() {
@@ -37,7 +35,7 @@ set-project-path() {
   popd > /dev/null
 }
 
-show-dev-env(){
+show-dev-env() {
   echo "Development environement variables: "
   for i in ${!DEV_*}
   do
@@ -48,8 +46,8 @@ show-dev-env(){
 
 generate-dev-env-profile() {
   if [ ! -f .dev-profile ]
-    then
-      cat > .dev-profile <<EOF
+  then
+    cat > .dev-profile <<EOF
 # The locatin of the ambari project on the host
 # This entry is mandatory!
 DEV_AMBARI_PROJECT_DIR=
@@ -69,17 +67,15 @@ DEV_AMBARI_PASSPHRASE=DEV
 # Custom Ambari server master key
 #DEV_AMBARI_SECURITY_MASTER_KEY=
 
-# The base domain in LDAP (this is the domain for the LDAP admin user cn=admin )
+# The base domain in LDAP (this is the domain for the LDAP admin user cn=admin)
 # LDAP_BASE_DOMAIN=
 
 # Password for LDAP admin user
 # LDAP_ROOTPASS=
-
-
 EOF
-echo "Please fill the newly generated .dev-profile in the current directory"
-exit 1;
-   else
+    echo "Please fill the newly generated .dev-profile in the current directory"
+    exit 1;
+  else
     source .dev-profile
     show-dev-env
   fi
@@ -93,7 +89,7 @@ check-dev-docker-image() {
   fi
 }
 
-build-rpm(){
+build-rpm() {
   if [ -z $1 ]
   then
     echo "No ambari module name provided!"
@@ -107,12 +103,12 @@ build-rpm(){
 
   case "$DEV_MODULE" in
     ambari-metrics)
-        DEV_RPM_EXISTS_CHECK_DIR="$DEV_AMBARI_PROJECT_DIR/$DEV_MODULE/ambari-metrics-assembly/target/rpm"
-        DEV_MVN_RPM_COMMAND="mvn package -Dbuild-rpm -Dstack.distribution=HDP -DskipTests -Dmaven.clover.skip=true -Dfindbugs.skip=true -Drat.skip=true -Dpython.ver='python >= 2.6'"
-    ;;
+      DEV_RPM_EXISTS_CHECK_DIR="$DEV_AMBARI_PROJECT_DIR/$DEV_MODULE/ambari-metrics-assembly/target/rpm"
+      DEV_MVN_RPM_COMMAND="mvn package -Dbuild-rpm -Dstack.distribution=HDP -DskipTests -Dmaven.clover.skip=true -Dfindbugs.skip=true -Drat.skip=true -Dpython.ver='python >= 2.6'"
+      ;;
     *)
-        DEV_RPM_EXISTS_CHECK_DIR="$DEV_AMBARI_PROJECT_DIR/$DEV_MODULE/target/rpm/$DEV_MODULE/RPMS/x86_64"
-        DEV_MVN_RPM_COMMAND="mvn package rpm:rpm -B -Dstack.distribution=HDP -DskipTests -Dmaven.clover.skip=true -Dfindbugs.skip=true -Drat.skip=true -Dpython.ver=\"python >= 2.6\""
+      DEV_RPM_EXISTS_CHECK_DIR="$DEV_AMBARI_PROJECT_DIR/$DEV_MODULE/target/rpm/$DEV_MODULE/RPMS/x86_64"
+      DEV_MVN_RPM_COMMAND="mvn package rpm:rpm -B -Dstack.distribution=HDP -DskipTests -Dmaven.clover.skip=true -Dfindbugs.skip=true -Drat.skip=true -Dpython.ver=\"python >= 2.6\""
   esac
 
   echo -n "Build rpm for $DEV_MODULE ... "
@@ -132,12 +128,11 @@ build-rpm(){
       $DEV_DOCKER_IMAGE \
       -c "$DEV_MVN_RPM_COMMAND"
   fi
-
 }
 
-gen-local-db-container-yml(){
+gen-local-db-container-yml() {
   CONTAINER_NAME=ambari-db
-  cat >> $1<<EOF
+  cat >> $1 <<EOF
 $CONTAINER_NAME:
   privileged: true
   container_name: $CONTAINER_NAME
@@ -156,9 +151,9 @@ $CONTAINER_NAME:
 EOF
 }
 
-gen-ambari-server-yml(){
+gen-ambari-server-yml() {
   CONTAINER_NAME=ambari-server
-  cat >> $1<<EOF
+  cat >> $1 <<EOF
 $CONTAINER_NAME:
   privileged: true
   container_name: $CONTAINER_NAME
@@ -198,7 +193,7 @@ $CONTAINER_NAME:
 EOF
 }
 
-gen-ambari-agent-yml(){
+gen-ambari-agent-yml() {
   CONTAINER_NAME=ambari-agent-$i
   cat <<EOF >> $1
 $CONTAINER_NAME:
@@ -225,7 +220,7 @@ $CONTAINER_NAME:
 EOF
 }
 
-gen-kerberos-server-yml(){
+gen-kerberos-server-yml() {
   CONTAINER_NAME=kerberos-server
   cat <<EOF >> $1
 $CONTAINER_NAME:
@@ -243,13 +238,13 @@ $CONTAINER_NAME:
 EOF
 }
 
-gen-compose-yml(){
+gen-compose-yml() {
   echo "Generating compose file: $1"
-  if [ -f  "$1" ]
-    then
-      backup_yml=$1_$(date +"%Y%m%d_%H%M%S").bak;
-      mv $1 $backup_yml
-      echo "Backed up previous compose file to: $backup_yml"
+  if [ -f "$1" ]
+  then
+    backup_yml=$1_$(date +"%Y%m%d_%H%M%S").bak;
+    mv $1 $backup_yml
+    echo "Backed up previous compose file to: $backup_yml"
   fi
   #gen-database-container-yml $1
   gen-local-db-container-yml $1
@@ -272,12 +267,11 @@ main() {
   build-rpm "ambari-agent"
 
   if [ "$1" = "build-server-rpm" ]
-    then
-      build-rpm "ambari-server"
+  then
+    build-rpm "ambari-server"
   fi
 
   gen-compose-yml docker-compose.yml
-
 }
 
 main "$@"

@@ -30,7 +30,7 @@ source .dev-profile
 : ${LDAP_ROOTPASS:=s3cr3tpassw0rd}
 
 
-show_dev_env(){
+show_dev_env() {
   echo "Development environement variables: "
   for i in ${!DEV_*}
   do
@@ -39,9 +39,7 @@ show_dev_env(){
   done
 }
 
-
-
-main(){
+main() {
   show_dev_env
 }
 

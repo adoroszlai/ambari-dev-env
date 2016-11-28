@@ -11,7 +11,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-setup(){
+setup() {
   : ${DEV_DOCKER_IMAGE:=ambari/docker-dev}
 
   # yum repo id to mirror
@@ -22,8 +22,6 @@ setup(){
   STACK_VERSION_MINOR=$(echo "$REPO_ID" | grep -oP "HDP-[0-9]+\.\K[0-9]+")
   STACK_VERSION_PATCH=$(echo "$REPO_ID" | grep -oP "HDP-[0-9]+\.[0-9]+\.\K[0-9]+")
   STACK_VERSION_BUILD=$(echo "$REPO_ID" | grep -oP "HDP-[0-9]+\.[0-9]+\.[0-9]+\.\K.+")
-
-
 
   # url that points to source repo file to be mirrored (e.g. http://public-repo-1.hortonworks.com/HDP/centos6/2.x/updates/2.3.2.0/hdp.repo)
   : ${REPO_SOURCE_URL:="http://public-repo-1.hortonworks.com/HDP/centos6/2.x/updates/$STACK_VERSION_MAJOR.$STACK_VERSION_MINOR.$STACK_VERSION_PATCH.$STACK_VERSION_BUILD/hdp.repo"}
@@ -36,16 +34,16 @@ create-yum-repo-mirror() {
   echo "Syncing yum repo $REPO_ID from $REPO_SOURCE_URL to $DEV_YUM_REPO_DIR ..."
 
   docker run \
-      --rm \
-      --privileged \
-      --entrypoint=/bin/bash \
-      -v "$DEV_YUM_REPO_DIR:/tmp" \
-      -w /tmp \
-      $DEV_DOCKER_IMAGE \
-      -c "wget $REPO_SOURCE_URL -O /etc/yum.repos.d/$REPO_ID.repo && reposync -n -p /tmp -r HDP-UTILS-* -r $REPO_ID && ls -d * | egrep \"HDP-UTILS-.+|$REPO_ID$\" | xargs -n 1 -I repo_dir createrepo --update repo_dir"
+    --rm \
+    --privileged \
+    --entrypoint=/bin/bash \
+    -v "$DEV_YUM_REPO_DIR:/tmp" \
+    -w /tmp \
+    $DEV_DOCKER_IMAGE \
+    -c "wget $REPO_SOURCE_URL -O /etc/yum.repos.d/$REPO_ID.repo && reposync -n -p /tmp -r HDP-UTILS-* -r $REPO_ID && ls -d * | egrep \"HDP-UTILS-.+|$REPO_ID$\" | xargs -n 1 -I repo_dir createrepo --update repo_dir"
 }
 
-gen-yum-repo-yml(){
+gen-yum-repo-yml() {
   DEV_YUM_CONTAINER_NAME=yum-repo
 
   cat <<EOF > yum-repo.yml
@@ -64,7 +62,7 @@ $DEV_YUM_CONTAINER_NAME:
 EOF
 }
 
-use-local-repo(){
+use-local-repo() {
   B2D_IP=$(docker-machine ip test)
 
   cat <<EOF >$HOME/tmp/local_repo.json
@@ -86,7 +84,7 @@ EOF
   curl --verbose -u admin:admin -H "X-Requested-By:ambari" -X PUT -d @"$HOME/tmp/local_repo.json" http://$B2D_IP:8080/api/v1/stacks/HDP/versions/$STACK_VERSION_MAJOR.$STACK_VERSION_MINOR/operating_systems/redhat6/repositories/$REPO_ID
 }
 
-main(){
+main() {
   setup
 
   if [ "$1" == "put-local-repo" ]

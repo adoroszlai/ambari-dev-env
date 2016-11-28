@@ -64,7 +64,6 @@ copy-libs-to-resources-dir() {
 
   echo "cp -f /ambari/ambari-server/target/DBConnectionVerification.jar /ambari/ambari-server/target/classes/DBConnectionVerification.jar"
   cp -f /ambari/ambari-server/target/DBConnectionVerification.jar /ambari/ambari-server/target/classes/DBConnectionVerification.jar
-
 }
 
 main() {

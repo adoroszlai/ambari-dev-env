@@ -12,7 +12,7 @@
 #   limitations under the License.
 
 
-build_modules(){
+build_modules() {
   modules_to_build=(ambari-web ambari-metrics ambari-admin ambari-views)
   echo "Building modules: ${modules_to_build[*]}"
   # DEV_AMBARI_PROJECT_DIR=~/prj/ambari

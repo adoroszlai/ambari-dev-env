@@ -12,16 +12,16 @@
 #   limitations under the License.
 
 main() {
- export CONTAINER_IP=$(hostname -i)
+  export CONTAINER_IP=$(hostname -i)
 
- echo "Registering $HOSTNAME consul node with consul cluster"
- consul agent -config-file=/etc/consul.json -server -node=$(hostname -s) -advertise=$CONTAINER_IP -client=0.0.0.0 -recursor=8.8.8.8  -recursor=192.168.0.1 -join ambari-server &
+  echo "Registering $HOSTNAME consul node with consul cluster"
+  consul agent -config-file=/etc/consul.json -server -node=$(hostname -s) -advertise=$CONTAINER_IP -client=0.0.0.0 -recursor=8.8.8.8  -recursor=192.168.0.1 -join ambari-server &
 
   if [ ! -n "$1" ] || [ "$1" = "local" ]
-    then
-      find /ambari/ambari-metrics/ambari-metrics-assembly/target/rpm -type f -name *.x86_64.rpm -print0 | xargs -0 yum install --disableplugin=fastestmirror -y
+  then
+    find /ambari/ambari-metrics/ambari-metrics-assembly/target/rpm -type f -name *.x86_64.rpm -print0 | xargs -0 yum install --disableplugin=fastestmirror -y
 
-      yum --disableplugin=fastestmirror install -y /ambari/ambari-agent/target/rpm/ambari-agent/RPMS/x86_64/ambari-agent-*.x86_64.rpm
+    yum --disableplugin=fastestmirror install -y /ambari/ambari-agent/target/rpm/ambari-agent/RPMS/x86_64/ambari-agent-*.x86_64.rpm
   else
     cd /etc/yum.repos.d
     wget $1

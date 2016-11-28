@@ -11,60 +11,59 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-
 case "$1" in
-      setup)
-          echo "Setting up dev env ...";
-          ./setup.sh
-          ;;
-      start)
-          echo "Starting dev env ..."
-          docker-compose up -d
-          ;;
-      schema-upgrade)
-          echo "Starting schema upgrade ...";
-          docker-compose run -d --service-ports --entrypoint="/scripts/upgrade-schema.sh" ambari-server -c "cc"
-          ;;
-      schema-reload)
-          echo "Reloading database ...";
-          docker-compose run -d --service-ports  --entrypoint="/scripts/reload-schema.sh"  ambari-db
-          ;;
-      yum-repo-start)
-          echo "Starting local yum repo mirror ...";
-          docker-compose -f yum-repo.yml up -d
-          ;;
-      yum-repo-setup)
-          echo "Setting up local yum repo mirror ...";
-          source .dev-profile
-          ./bin/yum-mirror.sh
-          ;;
-      use-local-yum-repo)
-          echo "Setting up local yum repo in ambari ...";
-          source .dev-profile
-          ./bin/yum-mirror.sh put-local-repo
-          ;;
-      openldap-start)
-          echo "Starting OpenLDAP (SLAPD) ..."
-          source .dev-profile
-          ./bin/standalone-open-ldap.sh
-          ;;
-      clean-setup)
-          echo "Clean setup ..."
-          source .dev-profile
-          rm -rf $DEV_AMBARI_PROJECT_DIR/ambari-server/target
-          rm -rf $DEV_AMBARI_PROJECT_DIR/ambari-agent/target
-          ./setup.sh
-          ;;
-      build)
-          echo "Building modules for the local env"
-          ./bin/build.sh
-          ;;
-      clean-logs)
-          echo "Cleaning ambari-server logs"
-          rm -rf "$HOME/tmp/docker/ambari-server/logs"
-          ;;
-      *)
-      echo "Available commands:
+  setup)
+    echo "Setting up dev env ...";
+    ./setup.sh
+    ;;
+  start)
+    echo "Starting dev env ..."
+    docker-compose up -d
+    ;;
+  schema-upgrade)
+    echo "Starting schema upgrade ...";
+    docker-compose run -d --service-ports --entrypoint="/scripts/upgrade-schema.sh" ambari-server -c "cc"
+    ;;
+  schema-reload)
+    echo "Reloading database ...";
+    docker-compose run -d --service-ports --entrypoint="/scripts/reload-schema.sh" ambari-db
+    ;;
+  yum-repo-start)
+    echo "Starting local yum repo mirror ...";
+    docker-compose -f yum-repo.yml up -d
+    ;;
+  yum-repo-setup)
+    echo "Setting up local yum repo mirror ...";
+    source .dev-profile
+    ./bin/yum-mirror.sh
+    ;;
+  use-local-yum-repo)
+    echo "Setting up local yum repo in ambari ...";
+    source .dev-profile
+    ./bin/yum-mirror.sh put-local-repo
+    ;;
+  openldap-start)
+    echo "Starting OpenLDAP (SLAPD) ..."
+    source .dev-profile
+    ./bin/standalone-open-ldap.sh
+    ;;
+  clean-setup)
+    echo "Clean setup ..."
+    source .dev-profile
+    rm -rf $DEV_AMBARI_PROJECT_DIR/ambari-server/target
+    rm -rf $DEV_AMBARI_PROJECT_DIR/ambari-agent/target
+    ./setup.sh
+    ;;
+  build)
+    echo "Building modules for the local env"
+    ./bin/build.sh
+    ;;
+  clean-logs)
+    echo "Cleaning ambari-server logs"
+    rm -rf "$HOME/tmp/docker/ambari-server/logs"
+    ;;
+  *)
+    echo "Available commands:
       ./dev-env setup
       ./dev-env start
       ./dev-env schema-upgrade

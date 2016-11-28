@@ -16,14 +16,14 @@ AMBARI_DEV_MVN_INSTALL_COMMAND='mvn clean install -U -DskipTests -DskipPythonTes
 AMBARI_DEV_MVN_TEST_COMMAND="mvn test -projects ambari-server"
 
 
-docker-build-dev-image(){
+docker-build-dev-image() {
   if [[ "$(docker images -q $AMBARI_DEV_DOCKER_IMAGE 2> /dev/null)" == "" ]]; then
     echo "Building the dev image: $AMBARI_DEV_DOCKER_IMAGE"
     docker build -t $AMBARI_DEV_DOCKER_IMAGE .
   fi
 }
 
-git-checkout(){
+git-checkout() {
   # delete temporary folder if exists
   if [ -d "$AMBARI_DEV_JENKINS_TMP_DIR" ]; then
     sudo rm -rf $AMBARI_DEV_JENKINS_TMP_DIR/ambari
@@ -39,7 +39,7 @@ git-checkout(){
 }
 
 
-execute-jenkins-job(){
+execute-jenkins-job() {
   AMBARI_DEV_MODULE=$1
   MVN_CMD="${@:2}"
   echo "Executing build task [ $MVN_CMD ] on module [ $AMBARI_DEV_MODULE ]"
@@ -56,7 +56,7 @@ execute-jenkins-job(){
     -c "$MVN_CMD"
 }
 
-install-all(){
+install-all() {
   # execute-jenkins-job ambari-metrics $AMBARI_DEV_MVN_INSTALL_COMMAND
   # execute-jenkins-job ambari-views $AMBARI_DEV_MVN_INSTALL_COMMAND
   # execute-jenkins-job ambari-web $AMBARI_DEV_MVN_INSTALL_COMMAND
@@ -66,25 +66,24 @@ install-all(){
   execute-jenkins-job "" $AMBARI_DEV_MVN_INSTALL_COMMAND
 }
 
-rpm-all(){
+rpm-all() {
   execute-jenkins-job ambari-metrics $AMBARI_DEV_MVN_RPM_COMMAND
   execute-jenkins-job ambari-server $AMBARI_DEV_MVN_RPM_COMMAND
   execute-jenkins-job ambari-agent $AMBARI_DEV_MVN_RPM_COMMAND
 }
 
-main (){
-
+main () {
   docker-build-dev-image
   git-checkout
 
   case $1 in
-    install-all )
+    install-all)
       install-all
       ;;
-    test-server )
+    test-server)
       execute-jenkins-job ambari-server $AMBARI_DEV_MVN_TEST_COMMAND
       ;;
-    rpm-all )
+    rpm-all)
       rpm-all
       ;;
     *)

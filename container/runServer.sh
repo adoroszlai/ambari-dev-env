@@ -13,14 +13,14 @@
 
 
 ambari-dev-server-start() {
- export CONTAINER_IP=$(hostname -i)
+  export CONTAINER_IP=$(hostname -i)
 
- echo "Container IP address": $CONTAINER_IP
+  echo "Container IP address": $CONTAINER_IP
 
- echo "Refreshing stack hash codes and starting the application.."
- python /ambari/ambari-server/src/main/python/ambari-server.py refresh-stack-hash
+  echo "Refreshing stack hash codes and starting the application.."
+  python /ambari/ambari-server/src/main/python/ambari-server.py refresh-stack-hash
 
- java \
+  java \
     -Dfile.encoding=UTF-8 \
     -Dlog4j.configuration=file:/ambari-server-conf/log4j.properties \
     -Xmx2048m -Xms256m \
@@ -53,7 +53,6 @@ ambari-dev-server-start() {
     else
       echo "Ambari Server stopped"
     fi
-
   done
 
   echo "exiting  ambari server $1"
@@ -61,13 +60,13 @@ ambari-dev-server-start() {
 
 ambari-setup () {
   if [ "$1" = "local" ]
-    then
-      echo "Installing from local target ..."
-      yum -y install /ambari/ambari-server/target/rpm/ambari-server/RPMS/x86_64/ambari-server-*.x86_64.rpm
+  then
+    echo "Installing from local target ..."
+    yum -y install /ambari/ambari-server/target/rpm/ambari-server/RPMS/x86_64/ambari-server-*.x86_64.rpm
   else
-      cd /etc/yum.repos.d
-      wget $1
-      yum -y install ambari-server
+    cd /etc/yum.repos.d
+    wget $1
+    yum -y install ambari-server
   fi
   ambari-server setup -s
 }
@@ -85,15 +84,15 @@ main() {
   consul agent -config-file=/etc/consul.json -server -bootstrap -node=$(hostname -s) -advertise=$(hostname -i) -client=0.0.0.0 -recursor=8.8.8.8 -recursor=192.168.0.1 &
 
   if [ ! -n "$1" ]
-    then
-      source /scripts/common-server-functions.sh
-      cd /ambari/ambari-server
-      generate-classpath
-      set-path
-      setup-security-config
-      create-version-file
-      copy-libs-to-resources-dir
-      ambari-dev-server-start
+  then
+    source /scripts/common-server-functions.sh
+    cd /ambari/ambari-server
+    generate-classpath
+    set-path
+    setup-security-config
+    create-version-file
+    copy-libs-to-resources-dir
+    ambari-dev-server-start
   else
     ambari-setup $1
     ambari-server-start
