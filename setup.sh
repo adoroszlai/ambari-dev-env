@@ -195,7 +195,7 @@ EOF
 
 gen-ambari-agent-yml() {
   CONTAINER_NAME=ambari-agent-$i
-  cat <<EOF >> $1
+  cat >> $1 <<EOF
 $CONTAINER_NAME:
   privileged: true
   container_name: $CONTAINER_NAME
@@ -222,7 +222,7 @@ EOF
 
 gen-kerberos-server-yml() {
   CONTAINER_NAME=kerberos-server
-  cat <<EOF >> $1
+  cat >> $1 <<EOF
 $CONTAINER_NAME:
   privileged: true
   container_name: $CONTAINER_NAME
