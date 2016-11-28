@@ -36,7 +36,7 @@ set-project-path() {
 }
 
 show-dev-env() {
-  echo "Development environement variables: "
+  echo "Development environment variables: "
   for i in ${!DEV_*}
   do
     eval val=\$$i
@@ -48,7 +48,7 @@ generate-dev-env-profile() {
   if [ ! -f .dev-profile ]
   then
     cat > .dev-profile <<EOF
-# The locatin of the ambari project on the host
+# The location of the ambari project on the host
 # This entry is mandatory!
 DEV_AMBARI_PROJECT_DIR=
 
